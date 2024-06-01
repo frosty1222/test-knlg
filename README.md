@@ -9,7 +9,7 @@
 ## Installation Steps
 
 1. **Install Laravel Dependencies**
-   `composer install` then run `php artisan migrate` this is must be run after connected to a database.
+   `composer install` then run `php artisan migrate` this must be run after connected to a database.
 in case these `products,categories` tables have already existed in database it will throw an error but it's ok . the error just alert warning that one of these table has existed . it's not an error so just leave it
 2. **Install js Dependencies**
    `npm install`
