@@ -45,6 +45,7 @@ class Leftbar extends Component
     // }
     public function showChildrenRoute($index)
     {
+        session()->flash('selectedIndex',$index);
         if ($this->selectedIndex === $index) {
             $this->selectedIndex = null;
         } else {

@@ -1,10 +1,12 @@
 <div>
     @if(session('alert-type') === "warning")
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <strong>{{session('message')}}</strong> 
+    <div class="col-md-6" style="float: left">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>{{session('message')}}</strong> 
+      </div>
     </div>
     
     <script>
@@ -12,12 +14,14 @@
     </script>
     @endif
     @if(session('alert-type') === "success")
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <strong>{{session('message')}}</strong> 
-    </div>
+     <div class="col-md-6" style="float: right">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>{{session('message')}}</strong> 
+      </div>
+     </div>
     
     <script>
       $(".alert").alert();
@@ -25,7 +29,7 @@
     @endif
     <h2 class="text-primary">{{$title}}</h2>
    <div class="helper-button">
-    <button class="btn btn-success"><i class="bi bi-plus-square"></i></button>
+    <button class="btn btn-success" wire:click='openModal'><i class="bi bi-plus-square"></i></button>
     <button class="btn btn-danger"  onclick="confirmDeletion(event,'deleteCategory')"><i class="bi bi-trash"></i></button>
    </div>
     <table class="table table-striped table-bordered">
@@ -41,18 +45,56 @@
                 @foreach ($data as $index => $d)
                 <tr>
                     <td>{{$index +1}}</td>
-                    <td><input type="checkbox" wire:change='collectId({{$d->id}},event.target.checked)'></td>
+                    <td><input type="checkbox" wire:change='collectId({{$d->id}},event.target.checked)' style="width: 30px"></td>
                     <td>{{$d->name}}</td>
                     <td>
-                        <button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-warning" wire:click='editAction({{$d}})'><i class="bi bi-pencil-square"></i></button>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
     </table>
-    <div class="pagination-section" style="display:flex;justify-content:right;">{{$data->links()}}</div>
+    <div id="button-section">
+      <div id="form-page">
+          <div class="form-group">
+              <input type="number" class="form-control" id="pageInput" wire:model="pageInput" min="1" max="{{ $data->lastPage() }}" value="{{ $data->currentPage() }}" placeholder="Enter a desire page" wire:change='upPage($event.target.value)'>
+          </div>
+      </div>
+      <div class="pagination-section">{{$data->links()}}</div> 
+   </div>
+    <div class="modal-section" @if($isShowSubmitForm === true)>
+      <div class="modal" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{$formTitle}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click='closeModal'>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                 <form  wire:submit.prevent="onSubmit">
+                       <input type="hidden" wire:model='id'>
+                      <div class="form-group">
+                            <input type="text" id="myInput" class="form-control" wire:model="name" wire:change='checkName' placeholder="Enter category name" required="true">
+                            @error('name') <span class="text-danger">{{ $message }}</span> @enderror
+                            @if($alertMess !=="") <span class="text-danger">{{ $alertMess }}</span> @endif
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click='closeModal'>Close</button>
+                      </div>
+                 </form>
+            </div>
+          </div>
+        </div>
+      </div>      
+    </div @endif>
 </div>
 <script>
+  // $('#addModal').on('shown.bs.modal', function () {
+  //  $('#myInput').trigger('focus')
+  // })
    function confirmDeletion(event,action) {
     event.preventDefault();
     Swal.fire({
@@ -68,16 +110,5 @@
             @this.call('deleteCategory');
         }
     })
-    }
-    if( session('alert-type')){
-            Swal.fire({
-            title: '{{ session('alert-type') === 'success' ? 'Success' : 'Warning' }}',
-            text: '{{ session('message') }}',
-            icon: '{{ session('alert-type') }}',
-            showCancelButton: '{{ session('alert-type') === 'warning' }}',
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Close'
-            });
     }
 </script>

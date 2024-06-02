@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Log;
 class Category extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $table = 'categories';
-    protected $fillable = ['name'];
+    protected $fillable = ['name','id'];
     public function products(){
         return $this->hasMany(Product::class,'category_id','id');
     }
@@ -23,9 +24,11 @@ class Category extends Model
         }
         return $data;
     }
-    public function create($request){
+    public function create($name){
        try {
-         $this->name = $request->name;
+         $id = $this->latest('id')->first();
+         $this->name = $name;
+         $this->id = $id->id +1;
          $save = $this->save();
          if($save){
             return true;
@@ -35,6 +38,18 @@ class Category extends Model
          Log::error($th->getMessage());
          return false;
        }
+    }
+    public function checkName($name){
+        try {
+            $check = $this->where('name',$name)->first();
+            if($check){
+                return true;
+            }
+            return false;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return false;
+        }
     }
     public function edit($request){
         try {

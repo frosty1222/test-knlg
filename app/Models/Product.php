@@ -18,9 +18,12 @@ class Product extends Model
     public function getAll($search = null){
         $data = [];
         if($search === null){
-          $data = $this->orderBy('id','DESC')->get();
+          $data = $this->orderBy('id','DESC')->paginate(10);
         }else{
-          $data = $this->where('name', 'like', "%{$search}%")->orderBy('id', 'DESC')->get();
+          $data = $this->where('name', 'like', "%{$search}%")->orderBy('id', 'DESC')->paginate(10);
+        }
+        foreach($data as $d){
+          $d->category;
         }
         return $data;
     }
@@ -54,16 +57,17 @@ class Product extends Model
           return false;
         }
     }
-    public function deleteRecord($id,$status){
-       try {
-         $delete = $this->find($id)->delete();
-         if($delete){
-            return true;
-         }
-         return false;
-       } catch (\Throwable $th) {
-        Log::error($th->getMessage());
-        return false;
-       }
+    public function deleteRecord(array $ids)
+    {
+        try {
+            if (count($ids) > 0) {
+                $delete = $this->whereIn('id', $ids)->delete();
+                return (bool) $delete;
+            }
+            return false;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return false;
+        }
     }
 }
