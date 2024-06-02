@@ -71,22 +71,19 @@ class Category extends Model
                 return false;
             }
     
-            if (count($ids) === 1) {
-                $deleteProduct = Product::where('category_id', $ids[0])->delete();
-                if ($deleteProduct) {
-                    $delete = Category::where('id', $ids[0])->delete();
-                    if ($delete) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-    
             foreach ($ids as $id) {
-                Product::whereIn('category_id', [$id])->delete();
-                $delete = Category::where('id', $id)->delete();
-                if (!$delete) {
-                    return false;
+                $productCount = Product::where('category_id', $id)->count();
+                
+                if ($productCount > 0) {
+                    Product::where('category_id', $id)->delete();
+                }
+                $remainingProductCount = Product::where('category_id', $id)->count();
+    
+                if ($remainingProductCount === 0) {
+                    $delete = Category::where('id', $id)->delete();
+                    if (!$delete) {
+                        return false;
+                    }
                 }
             }
     
@@ -97,5 +94,4 @@ class Category extends Model
             return false;
         }
     }
-    
 }

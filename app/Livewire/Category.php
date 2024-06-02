@@ -56,18 +56,20 @@ class Category extends Component
         if (count($this->categoryId) === 0) {
             session()->flash('message', 'Please select at least one category ID!');
             session()->flash('alert-type', 'warning');
-            $this->categoryId = [];
+            $this->reset(['categoryId']);
             return;
         }
         $delete = $this->category->deleteRecord($this->categoryId);
         if($delete === true){
             session()->flash('message', 'Category deleted successfully!');
             session()->flash('alert-type', 'success');
-            $this->categoryId = [];
+            $this->reset(['categoryId']);
             return;
         }
         session()->flash('message', 'Failed to delete categories');
         session()->flash('alert-type', 'warning');
+        $this->reset(['categoryId']);
+        return;
     }
     public function onSubmit(){
         $validatedData = $this->validate();
@@ -84,18 +86,19 @@ class Category extends Component
             $action =$findCategory->edit($this->name);
         }
         if($action === true){
-            $this->reset(['name']);
+            // $this->reset(['name']);
             $this->isShowSubmitForm = false;
             session()->flash('message', $this->isEdit === false ?'Category added successfully!':'Category edited successfully!');
             session()->flash('alert-type', 'success');
             $this->isShowSubmitForm = false;
             $this->isEdit = false;
-            return;
+            $this->redirect('/category');
+        }else{
+            session()->flash('message', 'Failed to add categories');
+            session()->flash('alert-type', 'warning');
         }
-        session()->flash('message', 'Failed to add categories');
-        session()->flash('alert-type', 'warning');
     }
-    public function openModal($status){
+    public function showModal($status){
         $this->isShowSubmitForm = $status;
         $this->isEdit = false;
     }

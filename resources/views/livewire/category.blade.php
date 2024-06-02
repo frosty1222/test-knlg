@@ -29,7 +29,7 @@
     @endif
     <h2 class="text-primary">{{$title}}</h2>
    <div class="helper-button">
-    <button class="btn btn-success" wire:click='openModal(true)'><i class="bi bi-plus-square"></i></button>
+    <button class="btn btn-success" wire:click='showModal(true)'><i class="bi bi-plus-square"></i></button>
     <button class="btn btn-danger"  onclick="confirmDeletion(event,'deleteCategory')"><i class="bi bi-trash"></i></button>
    </div>
     <table class="table table-striped table-bordered">
@@ -57,39 +57,45 @@
     <div id="button-section">
       <div id="form-page">
           <div class="form-group">
-              <input type="number" class="form-control" id="pageInput" wire:model="pageInput" min="1" max="{{ $data->lastPage() }}" value="{{ $data->currentPage() }}" placeholder="Enter a desire page" wire:change='upPage($event.target.value)'>
+              <input type="number" class="form-control" id="pageInput" min="1" max="{{ $data->lastPage() }}" value="{{ $data->currentPage() }}" placeholder="Enter a desire page" wire:change='upPage($event.target.value)'>
           </div>
       </div>
       <div class="pagination-section">{{$data->links()}}</div> 
    </div>
-    <div class="modal-section" @if($isShowSubmitForm === true)>
-      <div class="modal" role="dialog">
+   @if($isShowSubmitForm === true)
+   <div class="modal-section">
+    <div class="modal" role="dialog">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">{{$formTitle}}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click='openModal(false)'>
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                 <form  wire:submit.prevent="onSubmit">
-                       <input type="hidden" wire:model='id'>
-                      <div class="form-group">
-                            <input type="text" id="myInput" class="form-control" wire:model="name" wire:change='checkName' placeholder="Enter category name" required="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{$formTitle}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click='showModal(false)'>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form wire:submit.prevent="onSubmit()">
+                        <input type="hidden" wire:model='id'>
+                        <div class="form-group">
+                            <input type="text" id="myInput" class="form-control" wire:model="name" wire:change='checkName' placeholder="Enter category name" required>
                             @error('name') <span class="text-danger">{{ $message }}</span> @enderror
-                            @if($alertMess !=="") <span class="text-danger">{{ $alertMess }}</span> @endif
-                      </div>
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click='openModal(false)'>Close</button>
-                      </div>
-                 </form>
+                            @if($alertMess !== "") <span class="text-danger">{{ $alertMess }}</span> @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click='showModal(false)'>Close</button>
+                        </div>
+                    </form>
+                </div>
+                <div wire:loading>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
+              </div>
             </div>
-          </div>
         </div>
-      </div>      
-    </div @endif>
+    </div>
+   </div>
+   @endif
+
 </div>
 <script>
   // $('#addModal').on('shown.bs.modal', function () {

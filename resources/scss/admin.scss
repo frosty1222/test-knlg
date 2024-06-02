@@ -10,15 +10,37 @@ $backgroundBody:#151a30;
         display: flex;
         justify-content: space-between;
         div{
-            .bi.bi-caret-left-square-fill{
+            .bi.bi-caret-right-fill{
                 position: fixed;
                 top: 35%;
-                left: 0px;
+                left: -10px;
                 z-index: 9999;
                 cursor: pointer;
-                font-size: 30px;
-             }
+                font-size: 33px;
+                &:hover{
+                    font-size: 35px;
+                    color: #007bff;
+                    cursor: pointer;
+                }
+            }
             .left-side-bar{
+                .icon{
+                    width: 100%;
+                    position: absolute;
+                    text-align: right;
+                    top: 50%;
+                    .bi.bi-caret-left-fill{
+                        position: absolute;
+                        right: -3px;
+                        color: #fff;
+                        font-size: 26px;
+                        &:hover{
+                            font-size: 28px;
+                            color: #007bff;
+                            cursor: pointer;
+                        }
+                    }
+                }
                 width: 250px;
                 background-color:$backgrounDark;
                 min-height: 100%;
@@ -141,19 +163,8 @@ $backgroundBody:#151a30;
             border-bottom: 1px solid #dee2e6;
             .content{
                 display: flex;
-                justify-content: space-between;
+                justify-content: right;
                 height: 70px;
-                .icon{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-                    padding-left: 10px;
-                    svg{
-                        height: 30px;
-                        width: 30px;
-                    }
-                }
                 .profile{
                     display: flex;
                     justify-content: center;

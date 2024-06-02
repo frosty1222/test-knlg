@@ -1,10 +1,13 @@
 
 <div>
     @if($isShowLeftBar === false)
-    <i class="bi bi-caret-left-square-fill" wire:click="showBar"></i>
+    <i class="bi bi-caret-right-fill" wire:click="showBar"></i>
     @endif
     @if($isShowLeftBar === true)
     <div class="left-side-bar">
+        <div class="icon">
+            <i class="bi bi-caret-left-fill" wire:click='hideBar()'></i>
+        </div>
         <div class="left-content">
             <i class="bi bi-x-circle" wire:click="hideBar"></i>
             <div class="logo">

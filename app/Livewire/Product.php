@@ -70,18 +70,20 @@ class Product extends Component
         if (count($this->productIds) === 0) {
             session()->flash('message', 'Please select at least one product ID!');
             session()->flash('alert-type', 'warning');
-            $this->productIds = [];
+            $this->reset(['productIds']);
             return;
         }
         $delete = $this->product->deleteRecord($this->productIds);
         if($delete === true){
             session()->flash('message', 'Products deleted successfully!');
             session()->flash('alert-type', 'success');
-            $this->productIds = [];
+            $this->reset(['productIds']);
             return;
         }
         session()->flash('message', 'Failed to delete products');
         session()->flash('alert-type', 'warning');
+        $this->reset(['productIds']);
+        return;
     }
     public function showModal($status){
       $this->isShowModal = $status;
