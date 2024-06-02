@@ -109,18 +109,24 @@ class Product extends Component
             session()->flash('message', $this->isEdit === false ? 'product added successfully!':'product edited successfully!');
             session()->flash('alert-type', 'success');
             $this->isEdit = false;
-            return;
+            $this->redirect('/product');
+        }else{
+            session()->flash('message', 'Failed to add categories');
+            session()->flash('alert-type', 'warning');
+            $this->isEdit = false;
         }
-        session()->flash('message', 'Failed to add categories');
-        session()->flash('alert-type', 'warning');
-        $this->isEdit = false;
+        
     }
     public function checkName(){
-        $check = $this->product->checkName($this->name);
-        if($check === true){
-           $this->alertMess = "This product has existed. please pick another one";
+        if($this->isEdit === false){
+            $check = $this->product->checkName($this->name);
+            if($check === true){
+            $this->alertMess = "This product has existed. please pick another one .";
+            }else{
+            $this->alertMess = "";
+            }
         }else{
-           $this->alertMess = "";
+            $this->alertMess = "";
         }
    }
    public function editAction($data){

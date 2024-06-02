@@ -12,6 +12,9 @@
   </head>
   <body>
     <div class="login-form">
+      @if ($errors->has('error'))
+      <span class="text-danger">{{ $errors->first('error') }}</span>
+      @endif
         <form action="{{route('user.login-post')}}" method="post">
             @csrf
           <h1 class="h3 mb-3 font-weight-normal text-center">Please sign in</h1>

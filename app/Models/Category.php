@@ -51,9 +51,9 @@ class Category extends Model
             return false;
         }
     }
-    public function edit($request){
+    public function edit($name){
         try {
-          $this->name = $request->name;
+          $this->name = $name;
           $edit = $this->save();
           if($edit){
              return true;

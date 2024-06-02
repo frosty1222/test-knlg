@@ -112,6 +112,9 @@
                           </div>
                      </form>
                 </div>
+                <div wire:loading>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
+                </div>
               </div>
             </div>
           </div>     

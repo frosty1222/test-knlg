@@ -82,16 +82,19 @@ class Category extends Component
         if($this->isEdit === false){
             $action = $this->category->create($this->name);
         }else{
+            if($this->id === null || !$this->id){
+                return;
+            }
             $findCategory = $this->category::find($this->id);
             $action =$findCategory->edit($this->name);
         }
         if($action === true){
-            // $this->reset(['name']);
             $this->isShowSubmitForm = false;
             session()->flash('message', $this->isEdit === false ?'Category added successfully!':'Category edited successfully!');
             session()->flash('alert-type', 'success');
             $this->isShowSubmitForm = false;
             $this->isEdit = false;
+            $this->reset(['name']);
             $this->redirect('/category');
         }else{
             session()->flash('message', 'Failed to add categories');
@@ -103,15 +106,22 @@ class Category extends Component
         $this->isEdit = false;
     }
     public function checkName(){
-         $check = $this->category->checkName($this->name);
-         if($check === true){
-            $this->alertMess = "This category has existed. please pick another one";
+         if($this->isEdit === false){
+            $check = $this->category->checkName($this->name);
+            if($check === true){
+                $this->alertMess = "This category has existed. please pick another one";
+            }else{
+                $this->alertMess = "";
+            }
          }else{
             $this->alertMess = "";
          }
     }
     public function editAction($data){
-        if($data && count($data) === 0) return
+        if($data && count($data) === 0) return;
+        if(!$data['id']){
+            return;
+        }
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->isShowSubmitForm = true;

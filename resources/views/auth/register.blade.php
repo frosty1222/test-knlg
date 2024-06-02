@@ -18,6 +18,9 @@
           <div class="form-group">
             <label for="registerName">Full Name</label>
             <input type="text" name="name" id="registerName" class="form-control" placeholder="Full Name" required>
+            @if ($errors->has('name'))
+            <span class="text-danger">{{ $errors->first('name') }}</span>
+           @endif
           </div>
           <div class="form-group">
             <label for="registerEmail">Email address</label>
@@ -26,10 +29,16 @@
           <div class="form-group">
             <label for="registerPassword">Password</label>
             <input type="password" name="password" id="registerPassword" class="form-control" placeholder="Password" required>
+            @if ($errors->has('password'))
+            <span class="text-danger">{{ $errors->first('password') }}</span>
+            @endif
           </div>
           <div class="form-group">
             <label for="registerRePassword">Confirm Password</label>
             <input type="password" name="password_confirmation" id="registerRePassword" class="form-control" placeholder="Confirm Password" required>
+            @if ($errors->has('password_confirmation'))
+            <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
+            @endif 
           </div>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
           <a href="" class="login-link">Go to Login</a>
