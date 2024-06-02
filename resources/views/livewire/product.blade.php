@@ -29,7 +29,7 @@
     @endif
     <h2 class="text-primary">{{$title}}</h2>
     <div class="helper-button">
-     <button class="btn btn-success"><i class="bi bi-plus-square"></i></button>
+     <button class="btn btn-success" wire:click='showModal(true)'><i class="bi bi-plus-square"></i></button>
      <button class="btn btn-danger"  onclick="confirmDeletion(event,'deleteRecord')"><i class="bi bi-trash"></i></button>
     </div>
     <table class="table table-striped table-bordered">
@@ -56,7 +56,7 @@
                     <td>{{$product->actual_price}}</td>
                     <td>{{$product->category ? $product->category->name:"" }}</td>
                     <td>
-                        <button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-warning" wire:click='editAction({{$product}})'><i class="bi bi-pencil-square"></i></button>
                     </td>
                 </tr>
                 @endforeach
@@ -70,6 +70,52 @@
         </div>
         <div class="pagination-section">{{$products->links()}}</div> 
      </div>
+     <div class="modal-section" @if($isShowModal === true)>
+        <div class="modal" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">{{$formTitle}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click='showModal(false)'>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                     <form  wire:submit.prevent="onSubmit">
+                           <input type="number" wire:model='productId' hidden>
+                          <div class="form-group">
+                                <input type="text" id="myInput" class="form-control" wire:model="name" wire:change='checkName' placeholder="Enter product name" required="true">
+                                @error('name') <span class="text-danger">{{ $message }}</span> @enderror
+                                @if($alertMess !=="") <span class="text-danger">{{ $alertMess }}</span> @endif
+                          </div>
+                          <div class="form-group">
+                                <input type="text" id="myInput" class="form-control" wire:model="discount_price" placeholder="Enter discount price" required="true">
+                                @error('discount_price') <span class="text-danger">{{ $message }}</span> @enderror
+                          </div>
+                          <div class="form-group">
+                                <input type="text" id="myInput" class="form-control" wire:model="actual_price" placeholder="Enter actual price" required="true">
+                                @error('actual_price') <span class="text-danger">{{ $message }}</span> @enderror
+                          </div>
+                             <div class="form-group">
+                               <label for="">Select a category</label>
+                               <select class="form-control" wire:model='category_id'>
+                                <option value=""></option>
+                                @foreach ($categories as $data)
+                                    <option value="{{$data->id}}" {{ $data->id == $category_id ? 'selected' : '' }}>{{$data->name}}</option>
+                                @endforeach
+                               </select>
+                               @error('category_id') <span class="error">{{ $message }}</span> @enderror
+                             </div>
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click='showModal(false)'>Close</button>
+                          </div>
+                     </form>
+                </div>
+              </div>
+            </div>
+          </div>     
+     </div @endif>
 </div>
 <script>
     function confirmDeletion(event,action) {

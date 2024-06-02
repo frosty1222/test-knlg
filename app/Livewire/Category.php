@@ -95,12 +95,8 @@ class Category extends Component
         session()->flash('message', 'Failed to add categories');
         session()->flash('alert-type', 'warning');
     }
-    public function closeModal(){
-        $this->isShowSubmitForm = false;
-        $this->isEdit = false;
-    }
-    public function openModal(){
-        $this->isShowSubmitForm = true;
+    public function openModal($status){
+        $this->isShowSubmitForm = $status;
         $this->isEdit = false;
     }
     public function checkName(){
@@ -117,6 +113,7 @@ class Category extends Component
         $this->name = $data['name'];
         $this->isShowSubmitForm = true;
         $this->isEdit = true;
+        $this->formTitle = 'Edit Category';
     }
     public function upPage($value)
     {

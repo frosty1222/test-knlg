@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 class Product extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $table = 'products';
     protected $fillable = ['name','discount_price','actual_price','category_id'];
 
@@ -29,9 +30,10 @@ class Product extends Model
     }
     public function create($request){
        try {
-         $this->name = $request->name;
-         $this->discount_price = $request->discount_price;
-         $this->actual_price = $request->actual_price;
+         $this->name = $request['name'];
+         $this->discount_price = '₹'.$request['discount_price'];
+         $this->actual_price = '₹'.$request['actual_price'];
+         $this->category_id = $request['category_id'];
          $save = $this->save();
          if($save){
             return true;
@@ -42,11 +44,12 @@ class Product extends Model
          return false;
        }
     }
-    public function edit($request){
+    public function editRecord($request){
         try {
-          $this->name = $request->name;
-          $this->discount_price = $request->discount_price;
-          $this->actual_price = $request->actual_price;
+          $this->name = $request['name'];
+          $this->discount_price = $request['discount_price'];
+          $this->actual_price = $request['actual_price'];
+          $this->category_id = $request['category_id'];
           $edit = $this->save();
           if($edit){
              return true;
@@ -70,4 +73,16 @@ class Product extends Model
             return false;
         }
     }
+    public function checkName($name){
+      try {
+          $check = $this->where('name',$name)->first();
+          if($check){
+              return true;
+          }
+          return false;
+      } catch (\Throwable $th) {
+          Log::error($th->getMessage());
+          return false;
+      }
+  }
 }

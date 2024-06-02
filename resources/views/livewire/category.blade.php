@@ -29,7 +29,7 @@
     @endif
     <h2 class="text-primary">{{$title}}</h2>
    <div class="helper-button">
-    <button class="btn btn-success" wire:click='openModal'><i class="bi bi-plus-square"></i></button>
+    <button class="btn btn-success" wire:click='openModal(true)'><i class="bi bi-plus-square"></i></button>
     <button class="btn btn-danger"  onclick="confirmDeletion(event,'deleteCategory')"><i class="bi bi-trash"></i></button>
    </div>
     <table class="table table-striped table-bordered">
@@ -68,7 +68,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">{{$formTitle}}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click='closeModal'>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click='openModal(false)'>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -82,7 +82,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click='closeModal'>Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click='openModal(false)'>Close</button>
                       </div>
                  </form>
             </div>
